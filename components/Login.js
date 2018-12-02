@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Dimensions, ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, ImageBackground, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
+import { Button, Input } from 'react-native-elements'
 
 import { Font } from 'expo';
 
@@ -44,16 +45,70 @@ export default class Login extends Component {
   render() {
     const { username, password, showLoading } = this.state;
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
         <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
-          {this.state.fontLoaded ? <View>
-            <Text style={styles.title}>
-              DISPO
-              <Text style={styles.title_plus}>+</Text>
-            </Text>
-          </View> : null}
+          {this.state.fontLoaded ?
+            <View
+              style={styles.loginView}>
+              <View style={styles.loginTitle}>
+                <Text style={styles.title}>
+                  DISPO
+                  <Text style={styles.title_plus}>+</Text>
+                </Text>
+              </View>
+              <View style={styles.loginInput}>
+                <Input
+                  underlineColorAndroid='transparent'
+                  onChangeText={username => this.setState({ username })}
+                  value={username}
+                  containerStyle={styles.textContainer}
+                  inputContainerStyle={styles.inputContainer}
+                  inputStyle={{ marginLeft: 10, color: 'white' }}
+                  placeholder="Nom d'utilisateur"
+                  autoCorrect={false}
+                  returnKeyType="next"
+                  ref={input => this.usernameInput = input}
+                  onSubmitEditing={() => this.passwordInput.focus()}
+                  placeholderTextColor="white"
+                />
+                <Input
+                  underlineColorAndroid='transparent'
+                  onChangeText={(password) => this.setState({ password })}
+                  value={password}
+                  containerStyle={styles.textContainer}
+                  inputContainerStyle={styles.inputContainer}
+                  inputStyle={{ marginLeft: 10, color: 'white' }}
+                  autoCorrect={false}
+                  secureTextEntry={true}
+                  placeholder="Mot de passe"
+                  returnKeyType="done"
+                  ref={input => this.passwordInput = input}
+                  placeholderTextColor="white"
+                />
+              </View>
+              <Button
+                title='LOG IN'
+                onPress={this.submitLoginCredentials.bind(this)}
+                loading={showLoading}
+                loadingProps={{ size: 'small', color: 'white' }}
+                buttonStyle={{
+                  backgroundColor: "transparent",
+                  height: 50,
+                  width: 250,
+                  borderColor: "white",
+                  borderWidth: 1,
+                  borderRadius: 30,
+                }}
+                containerStyle={{
+                  marginTop: 30,
+                  marginBottom: 30,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              />
+            </View> : null}
         </ImageBackground>
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 
@@ -72,14 +127,40 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  loginView: {
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 5,
+    width: 300,
+    height: 300,
+  },
+  loginTitle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   title: {
     fontFamily: 'light',
-    fontSize: 38,
+    fontSize: 30,
     color: '#fff'
   },
   title_plus: {
     fontFamily: 'bold',
-    fontSize: 42,
+    fontSize: 30,
     color: '#fff'
+  },
+  loginInput: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  textContainer: {
+    marginVertical: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    borderRadius: 20,
+    width: 250
+  },
+  inputContainer: {
+    borderBottomWidth: 0,
+    marginLeft: 10
   }
 });
